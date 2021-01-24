@@ -9,7 +9,7 @@ import { Table,DropdownToggle,Dropdown,DropdownMenu, DropdownItem } from 'reacts
 class BooksComponent extends Component {
     constructor(props) {
         super(props);
-        this.state = { pageSize : 10, pageIndex : 0 , books : [], dropdownOpen: false, sortKey: 'high' };
+        this.state = { pageSize : 10, pageIndex : 0 , books : [], dropdownOpen: false, sortKey: '' };
     }
     componentDidMount() {
 
@@ -27,16 +27,16 @@ class BooksComponent extends Component {
 
         // if(this.state.books.length === 0) {
         //     // Fetching data from API
-            // const booksApi = 'https://s3-ap-southeast-1.amazonaws.com/he-public-data/books8f8fe52.json';
-            // fetch(booksApi,{
-            //     method: 'GET'
-            // })
-            // .then(res => res.json())
-            // .then(data => {
-            //     console.log("Fetching from api for the first time",data);
-            //     add(data) 
+            const booksApi = 'https://s3-ap-southeast-1.amazonaws.com/he-public-data/books8f8fe52.json';
+            fetch(booksApi,{
+                method: 'GET'
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Fetching from api for the first time",data);
+                add(data) 
                 
-            // })
+            })
         // }
         
     }
@@ -44,6 +44,7 @@ class BooksComponent extends Component {
     componentDidUpdate(prevBookState) {
 
         if(this.state.pageIndex !== prevBookState.pageIndex && this.state.sortKey !== prevBookState.sortKey) {
+            
             if(this.state.sortKey === 'low'){
                 getLowToHigh(localBookArray => {
                     this.setState(prevState => ({ books: localBookArray.slice(
@@ -118,19 +119,19 @@ class BooksComponent extends Component {
     }
 
     // sort ascending
-    sortPriceAscending = (key) => {
-        console.log(key)
+    sortPriceAscending = () => {
+        console.log("low")
             this.setState({
-            sortKey: key
+            sortKey: "low"
             })
     }
 
     // sort descending
-    sortPriceDescending = (key) => {
+    sortPriceDescending = () => {
 
-        console.log(key)
+        console.log("high")
             this.setState({
-            sortKey: key
+            sortKey: "high"
         })
     }
 
@@ -158,8 +159,8 @@ class BooksComponent extends Component {
                                     Price
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem onClick={() => this.sortPriceAscending("low")}>Low to High</DropdownItem>
-                                    <DropdownItem onClick={() => this.sortPriceDescending("high")}>High to Low</DropdownItem>
+                                    <DropdownItem onClick={this.sortPriceAscending}>Low to High</DropdownItem>
+                                    <DropdownItem onClick={this.sortPriceDescending}>High to Low</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                             </th>
