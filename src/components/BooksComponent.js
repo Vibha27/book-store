@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import {Link,withRouter} from 'react-router-dom';
 import { FaRupeeSign } from 'react-icons/fa';
 import StarRatings from 'react-star-ratings';
-import {add,get, addToCartDB, getCart } from '../services/database';
-import { Table,Button } from 'reactstrap';
+import {add,get, addToCartDB, getCart, getLowToHigh, getHighToLow } from '../services/database';
+import { Table,DropdownToggle,Dropdown,DropdownMenu, DropdownItem } from 'reactstrap';
 
 
 class BooksComponent extends Component {
     constructor(props) {
         super(props);
-        this.state = { pageSize : 10, pageIndex : 0 , books : [] };
+        this.state = { pageSize : 10, pageIndex : 0 , books : [], dropdownOpen: false, sortKey: 'high' };
     }
     componentDidMount() {
 
@@ -43,14 +43,49 @@ class BooksComponent extends Component {
   
     componentDidUpdate(prevBookState) {
 
-        if(this.state.pageIndex !== prevBookState.pageIndex) {
-            get(localBookArray => {
-                this.setState(prevState => ({ books: localBookArray.slice(
-                    prevState.pageIndex * prevState.pageSize,
-                    prevState.pageIndex * prevState.pageSize + prevState.pageSize
-                )}));
-            })
+        if(this.state.pageIndex !== prevBookState.pageIndex && this.state.sortKey !== prevBookState.sortKey) {
+            if(this.state.sortKey === 'low'){
+                getLowToHigh(localBookArray => {
+                    this.setState(prevState => ({ books: localBookArray.slice(
+                        prevState.pageIndex * prevState.pageSize,
+                        prevState.pageIndex * prevState.pageSize + prevState.pageSize
+                    )}));
+                })
+            }else {
+                getHighToLow(localBookArray => {
+                    this.setState(prevState => ({ books: localBookArray.slice(
+                        prevState.pageIndex * prevState.pageSize,
+                        prevState.pageIndex * prevState.pageSize + prevState.pageSize
+                    )}));
+                })
+            }
+            
+        }else if(this.state.sortKey !== prevBookState.sortKey) {
+            if(this.state.sortKey === 'low'){
+                getLowToHigh(localBookArray => {
+                    this.setState(prevState => ({ books: localBookArray.slice(
+                        prevState.pageIndex * prevState.pageSize,
+                        prevState.pageIndex * prevState.pageSize + prevState.pageSize
+                    )}));
+                })
+            }else {
+                getHighToLow(localBookArray => {
+                    this.setState(prevState => ({ books: localBookArray.slice(
+                        prevState.pageIndex * prevState.pageSize,
+                        prevState.pageIndex * prevState.pageSize + prevState.pageSize
+                    )}));
+                })
+            }
+            
+        }else if(this.state.pageIndex !== prevBookState.pageIndex) {
 
+                get(localBookArray => {
+                    this.setState(prevState => ({ books: localBookArray.slice(
+                        prevState.pageIndex * prevState.pageSize,
+                        prevState.pageIndex * prevState.pageSize + prevState.pageSize
+                    )}));
+                })
+            
         }
         
     }
@@ -75,7 +110,30 @@ class BooksComponent extends Component {
         this.props.history.push('/cart');
     }
 
-    
+    // ratings sorting
+    toggle = () => {
+        this.setState(prevState => ({
+         dropdownOpen : !prevState.dropdownOpen
+        }))
+    }
+
+    // sort ascending
+    sortPriceAscending = (key) => {
+        console.log(key)
+            this.setState({
+            sortKey: key
+            })
+    }
+
+    // sort descending
+    sortPriceDescending = (key) => {
+
+        console.log(key)
+            this.setState({
+            sortKey: key
+        })
+    }
+
     render() {
         let publicUrl = process.env.PUBLIC_URL+'/';
         const inlineStyle = {
@@ -91,8 +149,20 @@ class BooksComponent extends Component {
                             <tr className="row">
                             <th className="col-5 col-lg-5">Book</th>
                             <th className="col-3 col-lg-3">Author</th>
-                            <th className="col-2 col-lg-2">Ratings</th>
-                            <th className="col-1 col-lg-1">Price</th>
+                            <th className="col-1 col-lg-2">
+                                Ratings
+                            </th>
+                            <th className="col-2 col-lg-1">
+                            <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={() => this.toggle()}>
+                                <DropdownToggle caret>
+                                    Price
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem onClick={() => this.sortPriceAscending("low")}>Low to High</DropdownItem>
+                                    <DropdownItem onClick={() => this.sortPriceDescending("high")}>High to Low</DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                            </th>
                             <th className="col-1 col-lg-1">Add to Cart</th>
                             </tr>
                         </thead>

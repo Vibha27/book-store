@@ -30,9 +30,9 @@ class CheckoutComponent extends Component {
                             <FaUser size={22} />
                             <div className="col-11 col-md-11" >
                                 <h4>Account Info</h4>
-                                <Input placeholder="Enter name" value={this.state.name} onChange={(e) => this.setState({name : e.target.value})}/>
-                                <Input placeholder="Enter email" value={this.state.email} onChange={(e) => this.setState({email : e.target.value})}/>
-                                <Input placeholder="Enter Phone number" value={this.state.number} onChange={(e) => this.setState({number : e.target.value})}/>
+                                <Input className="search" placeholder="Enter name" value={this.state.name} onChange={(e) => this.setState({name : e.target.value})}/>
+                                <Input className="search" placeholder="Enter email" value={this.state.email} onChange={(e) => this.setState({email : e.target.value})}/>
+                                <Input className="search" placeholder="Enter Phone number" value={this.state.number} onChange={(e) => this.setState({number : e.target.value})}/>
                                 <button className="btn btn-block cart" onClick={() => this.setState({showAddress : true})}>Continue</button>
                             </div>
                         </div>
@@ -43,7 +43,7 @@ class CheckoutComponent extends Component {
 
                                     <div className="col-11 col-md-11" >
                                         <h4>Address</h4>
-                                        <Input placeholder="Enter address" value={this.state.address} onChange={(e) => this.setState({address : e.target.value})}/>
+                                        <Input className="search" placeholder="Enter address" value={this.state.address} onChange={(e) => this.setState({address : e.target.value})}/>
                                         <button className="btn btn-block cart" onClick={() => this.setState({showPayment : true})}>Continue</button>
                                     </div>
                                 

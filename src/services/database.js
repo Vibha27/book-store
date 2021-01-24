@@ -20,7 +20,7 @@ const onRequestError = (e) => {
     
   }
 }
-
+// get high to low
 export const get = (callback) => {
   const request = DB();
   
@@ -39,10 +39,46 @@ export const get = (callback) => {
   }
 }
 
+// get low to high
+export const getLowToHigh = (callback) => {
+  const request = DB();
+  
+  request.onerror = onRequestError;
+
+  request.onsuccess = (e) => {
+    const db = e.target.result;
+    const transaction = db.transaction(['books'], 'readonly');
+    const store = transaction.objectStore('books');
+    
+    store.getAll().onsuccess = (ev) => {
+      // Sorting the result from indexeddb
+      const sortedArray = ascendingPriceSort(ev.target.result);
+      callback(sortedArray);
+    }
+  }
+}
+// get high to low
+export const getHighToLow = (callback) => {
+  const request = DB();
+  
+  request.onerror = onRequestError;
+
+  request.onsuccess = (e) => {
+    const db = e.target.result;
+    const transaction = db.transaction(['books'], 'readonly');
+    const store = transaction.objectStore('books');
+    
+    store.getAll().onsuccess = (ev) => {
+      // Sorting the result from indexeddb
+      const sortedArray = descendingPriceSort(ev.target.result);
+      callback(sortedArray);
+    }
+  }
+}
 export const destroy = () => {
 
 }
-
+// high to low ratings
 const sort = (array) => {
   var len = array.length;
   if(len < 2) { 
@@ -69,6 +105,57 @@ const sort = (array) => {
   return result;
 }
 
+// low to high price
+const ascendingPriceSort = (array) => {
+  var len = array.length;
+  if(len < 2) { 
+    return array;
+  }
+
+  var pivot = Math.ceil(len/2);
+  return ascendingPriceMerge(ascendingPriceSort(array.slice(0,pivot)), ascendingPriceSort(array.slice(pivot)));
+};
+
+ const ascendingPriceMerge = (left, right) => {
+  var result = [];
+  while((left.length > 0) && (right.length > 0)) {
+    if(left[0].price < right[0].price) {
+      result.push(left.shift()); //left array's first element will be pushed to result
+    }
+    else {
+      result.push(right.shift());  //right array's first element will be pushed to result
+    }
+  }
+
+  result = result.concat(left, right);
+  return result;
+}
+
+// low to high price
+const descendingPriceSort = (array) => {
+  var len = array.length;
+  if(len < 2) { 
+    return array;
+  }
+
+  var pivot = Math.ceil(len/2);
+  return descendingPriceMerge(descendingPriceSort(array.slice(0,pivot)), descendingPriceSort(array.slice(pivot)));
+};
+
+ const descendingPriceMerge = (left, right) => {
+  var result = [];
+  while((left.length > 0) && (right.length > 0)) {
+    if(left[0].price > right[0].price) {
+      result.push(left.shift()); //left array's first element will be pushed to result
+    }
+    else {
+      result.push(right.shift());  //right array's first element will be pushed to result
+    }
+  }
+
+  result = result.concat(left, right);
+  return result;
+}
 // Add to cart
 export const  addToCartDB = (book) => {
   const request = DB ();
@@ -98,7 +185,7 @@ export const getCart = (callback) => {
     
     store.getAll().onsuccess = (ev) => {
       callback(ev.target.result);
-      console.log(ev.target.result)
+      // console.log(ev.target.result)
     }
   }
 }
