@@ -14,6 +14,7 @@ export default () => {
   request.onupgradeneeded = (e) => {
     const db = e.target.result;
     db.createObjectStore("books",{ keyPath : "bookID"});
+    db.createObjectStore("cart",{ keyPath : "bookID"});
   }
 
   return request;

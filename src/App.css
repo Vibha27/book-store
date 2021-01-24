@@ -1,38 +1,50 @@
 .App {
   text-align: center;
 }
+.search {
+  
+border-color: rgb(255, 102, 51);
+}
+.table {
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  border-style: ridge;
+margin-left: 1px;
+border-color: rgb(255, 102, 51);
+}
+.title {
+  font-family: Georgia, serif;
+  font-style : italic;
+  font-weight: bolder;
+  font-size: 32px;
+  color:rgb(255, 102, 51);
+  
+}
+.book-name {
+  color : black;
+}
+.book-name:hover {
+  color: black;
+  cursor:   pointer;
+}
+.cart {
+  background-color: rgb(255, 102, 51);
+  color: white
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.buy {
+  background-color: rgb(255, 133, 51);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.footer-area {
+  background-color: #403a35;
 }
 
-.App-link {
-  color: #61dafb;
+li {
+  list-style: none;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.social li {
+  padding : 5px;
+  display : inline;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
